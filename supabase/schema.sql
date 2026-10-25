@@ -33,7 +33,8 @@ create table public.leads (
   created_at timestamptz not null default now(),
   property_id uuid references public.properties (id) on delete cascade,
   name text not null,
-  phone text not null
+  phone text not null,
+  message text
 );
 
 alter table public.leads enable row level security;

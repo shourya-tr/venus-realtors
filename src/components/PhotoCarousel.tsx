@@ -49,7 +49,7 @@ export default function PhotoCarousel({
   return (
     <div className="group relative aspect-[4/3] w-full overflow-hidden bg-stone-100">
       <div ref={emblaRef} className="h-full w-full overflow-hidden">
-        <div className="flex h-full touch-pan-y">
+        <div className="flex h-full">
           {slides.map((slide, i) => (
             <div key={i} className="relative h-full w-full flex-none">
               {slide.type === "image" ? (
@@ -79,18 +79,24 @@ export default function PhotoCarousel({
           <button
             type="button"
             aria-label="Previous photo"
-            onClick={() => emblaApi?.scrollPrev()}
-            className="absolute left-2 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-stone-700 shadow-sm backdrop-blur-sm transition-opacity sm:opacity-0 sm:group-hover:opacity-100 sm:focus:opacity-100"
+            onPointerDown={(e) => e.stopPropagation()}
+            onClick={(e) => { e.stopPropagation(); emblaApi?.scrollPrev(); }}
+            className="absolute left-2.5 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-stone-700 shadow-md backdrop-blur-sm transition-all active:scale-90 sm:opacity-0 sm:group-hover:opacity-100 sm:focus:opacity-100"
           >
-            ‹
+            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
           </button>
           <button
             type="button"
             aria-label="Next photo"
-            onClick={() => emblaApi?.scrollNext()}
-            className="absolute right-2 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-stone-700 shadow-sm backdrop-blur-sm transition-opacity sm:opacity-0 sm:group-hover:opacity-100 sm:focus:opacity-100"
+            onPointerDown={(e) => e.stopPropagation()}
+            onClick={(e) => { e.stopPropagation(); emblaApi?.scrollNext(); }}
+            className="absolute right-2.5 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-stone-700 shadow-md backdrop-blur-sm transition-all active:scale-90 sm:opacity-0 sm:group-hover:opacity-100 sm:focus:opacity-100"
           >
-            ›
+            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
           </button>
           <div className="absolute bottom-2.5 left-1/2 flex -translate-x-1/2 gap-1.5">
             {slides.map((_, i) => (
@@ -98,8 +104,9 @@ export default function PhotoCarousel({
                 key={i}
                 type="button"
                 aria-label={`Go to slide ${i + 1}`}
-                onClick={() => emblaApi?.scrollTo(i)}
-                className={`h-2 w-2 rounded-full transition-colors ${
+                onPointerDown={(e) => e.stopPropagation()}
+                onClick={(e) => { e.stopPropagation(); emblaApi?.scrollTo(i); }}
+                className={`h-2.5 w-2.5 rounded-full transition-colors ${
                   i === selectedIndex ? "bg-white" : "bg-white/50"
                 }`}
               />

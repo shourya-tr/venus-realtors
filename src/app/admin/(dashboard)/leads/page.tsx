@@ -7,6 +7,7 @@ type LeadRow = {
   created_at: string;
   name: string;
   phone: string;
+  message: string | null;
   properties: { address: string; name: string } | null;
 };
 
@@ -14,7 +15,7 @@ export default async function AdminLeadsPage() {
   const supabase = createAdminClient();
   const { data: leads, error } = await supabase
     .from("leads")
-    .select("id, created_at, name, phone, properties(address, name)")
+    .select("id, created_at, name, phone, message, properties(address, name)")
     .order("created_at", { ascending: false })
     .returns<LeadRow[]>();
 
@@ -49,8 +50,11 @@ export default async function AdminLeadsPage() {
                 </p>
               </div>
               <p className="mt-2 text-sm text-stone-500">
-                {lead.properties?.name || lead.properties?.address || "(listing removed)"}
+                {lead.properties?.name || lead.properties?.address || "General enquiry"}
               </p>
+              {lead.message && (
+                <p className="mt-1.5 text-sm text-stone-600 italic">&ldquo;{lead.message}&rdquo;</p>
+              )}
             </div>
           ))}
         </div>
@@ -66,6 +70,7 @@ export default async function AdminLeadsPage() {
                 <th className="px-4 py-3 font-medium">Name</th>
                 <th className="px-4 py-3 font-medium">Phone</th>
                 <th className="px-4 py-3 font-medium">Property</th>
+                <th className="px-4 py-3 font-medium">Message</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-stone-100">
@@ -77,7 +82,10 @@ export default async function AdminLeadsPage() {
                   <td className="px-4 py-3 font-medium text-stone-900">{lead.name}</td>
                   <td className="px-4 py-3 text-stone-700">{lead.phone}</td>
                   <td className="px-4 py-3 text-stone-700">
-                    {lead.properties?.name || lead.properties?.address || "(listing removed)"}
+                    {lead.properties?.name || lead.properties?.address || "General enquiry"}
+                  </td>
+                  <td className="px-4 py-3 text-stone-500">
+                    {lead.message || "—"}
                   </td>
                 </tr>
               ))}

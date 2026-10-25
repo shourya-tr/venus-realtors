@@ -1,67 +1,49 @@
 "use client";
 
-import { useState } from "react";
 import PhotoCarousel from "@/components/PhotoCarousel";
-import InterestForm from "@/components/InterestForm";
-import { formatBathrooms, formatPrice } from "@/lib/format";
+import { formatBathrooms } from "@/lib/format";
 import type { Property } from "@/types/property";
 
 export default function PropertyCard({ property }: { property: Property }) {
-  const [open, setOpen] = useState(false);
-
   return (
-    <div className="flex flex-col overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-sm transition-shadow active:shadow-md sm:hover:shadow-md">
-      <PhotoCarousel
-        photoUrls={property.photo_urls}
-        youtubeUrl={property.youtube_url}
-        alt={property.name || property.address}
-      />
+    <div className="group/card flex flex-col overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-sm transition-all duration-200 active:shadow-lg active:-translate-y-0.5 sm:hover:shadow-lg sm:hover:-translate-y-0.5">
+      <div className="relative">
+        <PhotoCarousel
+          photoUrls={property.photo_urls}
+          youtubeUrl={property.youtube_url}
+          alt={property.name || property.address}
+        />
+      </div>
 
-      <div className="flex flex-1 flex-col gap-2 p-4">
-        <p className="text-lg font-bold text-stone-900 leading-tight sm:text-xl">
-          {formatPrice(property.price)}
-        </p>
-
+      <div className="flex flex-1 flex-col gap-1.5 p-4 sm:p-5">
         {property.name && (
-          <p className="text-sm font-medium text-stone-800">{property.name}</p>
+          <p className="text-base font-bold text-stone-900 sm:text-lg">{property.name}</p>
         )}
 
-        <p className="text-sm text-stone-500 leading-snug">{property.address}</p>
+        <p className="flex items-center gap-1.5 text-sm text-stone-500 leading-snug">
+          <svg width="14" height="14" className="flex-shrink-0 text-stone-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+          {property.address}
+        </p>
 
-        <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-stone-600 sm:text-sm">
-          <span>{property.bedrooms} Beds</span>
-          <span className="text-stone-300">|</span>
-          <span>{formatBathrooms(property.bathrooms)} Baths</span>
-          <span className="text-stone-300">|</span>
-          <span>{property.sqft.toLocaleString("en-IN")} sq ft</span>
+        <div className="mt-1 flex items-center gap-2 text-xs text-stone-600 sm:text-sm">
+          <span className="flex items-center gap-1 rounded-full bg-stone-100 px-2.5 py-1 font-medium">
+            {property.bedrooms} Beds
+          </span>
+          <span className="flex items-center gap-1 rounded-full bg-stone-100 px-2.5 py-1 font-medium">
+            {formatBathrooms(property.bathrooms)} Baths
+          </span>
+          <span className="flex items-center gap-1 rounded-full bg-stone-100 px-2.5 py-1 font-medium">
+            {property.sqft.toLocaleString("en-IN")} ft&sup2;
+          </span>
         </div>
 
         {property.description && (
-          <p className="line-clamp-2 text-sm text-stone-500 leading-relaxed">{property.description}</p>
+          <p className="mt-1 line-clamp-2 text-sm text-stone-500 leading-relaxed">{property.description}</p>
         )}
-
-        <button
-          type="button"
-          onClick={() => setOpen(true)}
-          className="mt-auto w-full rounded-xl bg-amber-700 px-4 py-3 text-sm font-semibold text-white active:bg-amber-800 sm:hover:bg-amber-800 sm:py-2.5"
-        >
-          I&apos;m Interested
-        </button>
       </div>
-
-      {open && (
-        <div
-          className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 sm:items-center sm:p-4"
-          onClick={() => setOpen(false)}
-        >
-          <div
-            className="w-full max-w-sm rounded-t-2xl bg-white shadow-xl sm:rounded-2xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <InterestForm propertyId={property.id} onClose={() => setOpen(false)} />
-          </div>
-        </div>
-      )}
     </div>
   );
 }
