@@ -7,6 +7,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 const PHOTO_BUCKET = "property-photos";
 
 export async function createProperty(formData: FormData) {
+  const name = String(formData.get("name") ?? "").trim();
   const priceRaw = String(formData.get("price") ?? "");
   const address = String(formData.get("address") ?? "").trim();
   const bedrooms = Number(formData.get("bedrooms") ?? 0);
@@ -49,6 +50,7 @@ export async function createProperty(formData: FormData) {
   }
 
   const { error: insertError } = await supabase.from("properties").insert({
+    name,
     price,
     address,
     bedrooms: Number.isFinite(bedrooms) ? bedrooms : 0,

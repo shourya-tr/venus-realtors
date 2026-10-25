@@ -15,7 +15,7 @@ export default function DeletePropertyButton({ id }: { id: string }) {
       <input type="hidden" name="id" value={id} />
       <button
         type="submit"
-        className="rounded-lg border border-red-200 px-3 py-1.5 text-sm font-medium text-red-600 hover:bg-red-50"
+        className="w-full rounded-xl border border-red-200 px-3 py-2.5 text-sm font-medium text-red-600 active:bg-red-50 sm:w-auto sm:py-1.5 sm:hover:bg-red-50"
       >
         Delete
       </button>

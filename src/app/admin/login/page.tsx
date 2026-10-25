@@ -10,14 +10,15 @@ export default async function AdminLoginPage({
 
   return (
     <main className="flex flex-1 items-center justify-center px-4 py-10">
-      <div className="w-full max-w-sm rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-        <h1 className="text-lg font-semibold text-slate-900">Admin Login</h1>
-        <p className="mt-1 text-sm text-slate-500">Enter the admin password to continue.</p>
+      <div className="w-full max-w-sm rounded-2xl border border-stone-200 bg-white p-6 shadow-sm">
+        <p className="text-sm font-semibold text-amber-700">Venus Realtors</p>
+        <h1 className="mt-1 text-lg font-bold text-stone-900">Admin Login</h1>
+        <p className="mt-1 text-sm text-stone-500">Enter the admin password to continue.</p>
 
-        <form action={login} className="mt-5 space-y-3">
+        <form action={login} className="mt-5 space-y-4">
           <input type="hidden" name="next" value={next} />
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-slate-700">
+            <label htmlFor="password" className="block text-sm font-medium text-stone-700">
               Password
             </label>
             <input
@@ -26,7 +27,7 @@ export default async function AdminLoginPage({
               type="password"
               required
               autoFocus
-              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
+              className="mt-1.5 w-full rounded-xl border border-stone-300 px-4 py-3 text-base focus:border-amber-600 focus:ring-1 focus:ring-amber-600 focus:outline-none"
             />
           </div>
 
@@ -36,7 +37,7 @@ export default async function AdminLoginPage({
 
           <button
             type="submit"
-            className="w-full rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700"
+            className="w-full rounded-xl bg-stone-900 px-4 py-3 text-sm font-semibold text-white active:bg-stone-700 sm:hover:bg-stone-700"
           >
             Log in
           </button>

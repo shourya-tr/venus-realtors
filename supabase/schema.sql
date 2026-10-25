@@ -5,6 +5,7 @@
 create table public.properties (
   id uuid primary key default gen_random_uuid(),
   created_at timestamptz not null default now(),
+  name text not null default '',
   price numeric not null,
   address text not null,
   bedrooms smallint not null default 0,

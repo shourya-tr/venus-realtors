@@ -10,31 +10,40 @@ export default function PropertyCard({ property }: { property: Property }) {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition-shadow hover:shadow-md">
+    <div className="flex flex-col overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-sm transition-shadow active:shadow-md sm:hover:shadow-md">
       <PhotoCarousel
         photoUrls={property.photo_urls}
         youtubeUrl={property.youtube_url}
-        alt={property.address}
+        alt={property.name || property.address}
       />
 
-      <div className="flex flex-1 flex-col p-4">
-        <p className="text-xl font-semibold text-slate-900">{formatPrice(property.price)}</p>
-        <p className="mt-0.5 text-sm text-slate-600">{property.address}</p>
+      <div className="flex flex-1 flex-col gap-2 p-4">
+        <p className="text-lg font-bold text-stone-900 leading-tight sm:text-xl">
+          {formatPrice(property.price)}
+        </p>
 
-        <div className="mt-3 flex gap-4 text-sm text-slate-700">
-          <span>{property.bedrooms} bd</span>
-          <span>{formatBathrooms(property.bathrooms)} ba</span>
-          <span>{property.sqft.toLocaleString()} sqft</span>
+        {property.name && (
+          <p className="text-sm font-medium text-stone-800">{property.name}</p>
+        )}
+
+        <p className="text-sm text-stone-500 leading-snug">{property.address}</p>
+
+        <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-stone-600 sm:text-sm">
+          <span>{property.bedrooms} Beds</span>
+          <span className="text-stone-300">|</span>
+          <span>{formatBathrooms(property.bathrooms)} Baths</span>
+          <span className="text-stone-300">|</span>
+          <span>{property.sqft.toLocaleString("en-IN")} sq ft</span>
         </div>
 
         {property.description && (
-          <p className="mt-3 line-clamp-3 text-sm text-slate-600">{property.description}</p>
+          <p className="line-clamp-2 text-sm text-stone-500 leading-relaxed">{property.description}</p>
         )}
 
         <button
           type="button"
           onClick={() => setOpen(true)}
-          className="mt-4 w-full rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700"
+          className="mt-auto w-full rounded-xl bg-amber-700 px-4 py-3 text-sm font-semibold text-white active:bg-amber-800 sm:hover:bg-amber-800 sm:py-2.5"
         >
           I&apos;m Interested
         </button>
@@ -42,11 +51,11 @@ export default function PropertyCard({ property }: { property: Property }) {
 
       {open && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+          className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 sm:items-center sm:p-4"
           onClick={() => setOpen(false)}
         >
           <div
-            className="w-full max-w-sm rounded-xl bg-white shadow-xl"
+            className="w-full max-w-sm rounded-t-2xl bg-white shadow-xl sm:rounded-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <InterestForm propertyId={property.id} onClose={() => setOpen(false)} />
