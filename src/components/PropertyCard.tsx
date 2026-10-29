@@ -1,12 +1,11 @@
-"use client";
-
+import Link from "next/link";
 import PhotoCarousel from "@/components/PhotoCarousel";
 import { formatBathrooms } from "@/lib/format";
 import type { Property } from "@/types/property";
 
 export default function PropertyCard({ property }: { property: Property }) {
   return (
-    <div className="group/card flex flex-col overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-sm transition-all duration-200 active:shadow-lg active:-translate-y-0.5 sm:hover:shadow-lg sm:hover:-translate-y-0.5">
+    <Link href={`/properties/${property.id}`} className="group/card flex flex-col overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-sm transition-all duration-200 active:shadow-lg active:-translate-y-0.5 sm:hover:shadow-lg sm:hover:-translate-y-0.5">
       <div className="relative">
         <PhotoCarousel
           photoUrls={property.photo_urls}
@@ -44,6 +43,6 @@ export default function PropertyCard({ property }: { property: Property }) {
           <p className="mt-1 line-clamp-2 text-sm text-stone-500 leading-relaxed">{property.description}</p>
         )}
       </div>
-    </div>
+    </Link>
   );
 }
