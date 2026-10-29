@@ -43,12 +43,13 @@ export async function createProperty(formData: FormData) {
     }),
   );
 
-  const failed = uploadResults.find((r) => "error" in r);
-  if (failed && "error" in failed) {
-    redirect(`/admin/properties/new?error=${encodeURIComponent(`Photo upload failed: ${failed.error}`)}`);
+  const photo_urls: string[] = [];
+  for (const r of uploadResults) {
+    if ("error" in r) {
+      redirect(`/admin/properties/new?error=${encodeURIComponent(`Photo upload failed: ${r.error}`)}`);
+    }
+    photo_urls.push(r.url);
   }
-
-  const photo_urls = uploadResults.map((r) => ("url" in r ? r.url : ""));
 
   const { error: insertError } = await supabase.from("properties").insert({
     name,

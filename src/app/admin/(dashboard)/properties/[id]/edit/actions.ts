@@ -48,13 +48,11 @@ export async function updateProperty(formData: FormData) {
     }),
   );
 
-  const failed = uploadResults.find((r) => "error" in r);
-  if (failed && "error" in failed) {
-    redirect(`/admin/properties/${id}/edit?error=${encodeURIComponent(`Photo upload failed: ${failed.error}`)}`);
-  }
-
   for (const r of uploadResults) {
-    if ("url" in r) photo_urls.push(r.url);
+    if ("error" in r) {
+      redirect(`/admin/properties/${id}/edit?error=${encodeURIComponent(`Photo upload failed: ${r.error}`)}`);
+    }
+    photo_urls.push(r.url);
   }
 
   const { error: updateError } = await supabase
