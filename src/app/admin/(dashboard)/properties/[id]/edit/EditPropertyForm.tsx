@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useActionState } from "react";
 import Image from "next/image";
+import { compressImage } from "@/lib/compress-image";
 import { updateProperty } from "./actions";
 import type { Property } from "@/types/property";
 
@@ -14,8 +15,23 @@ export default function EditPropertyForm({
   error?: string;
 }) {
   const [photoUrls, setPhotoUrls] = useState<string[]>(property.photo_urls);
+  const [status, setStatus] = useState("");
   const [, formAction, isPending] = useActionState(
     async (_prev: void, formData: FormData) => {
+      const photos = formData
+        .getAll("photos")
+        .filter((entry): entry is File => entry instanceof File && entry.size > 0);
+
+      if (photos.length > 0) {
+        formData.delete("photos");
+        for (let i = 0; i < photos.length; i++) {
+          setStatus(`Compressing photo ${i + 1} of ${photos.length}...`);
+          const compressed = await compressImage(photos[i]);
+          formData.append("photos", compressed);
+        }
+        setStatus(`Uploading ${photos.length} photos...`);
+      }
+
       await updateProperty(formData);
     },
     undefined,
@@ -224,7 +240,7 @@ export default function EditPropertyForm({
             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
           </svg>
         )}
-        {isPending ? "Saving..." : "Save Changes"}
+        {isPending ? status || "Saving..." : "Save Changes"}
       </button>
     </form>
   );

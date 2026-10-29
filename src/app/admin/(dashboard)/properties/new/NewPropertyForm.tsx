@@ -1,11 +1,28 @@
 "use client";
 
+import { useState } from "react";
 import { useActionState } from "react";
+import { compressImage } from "@/lib/compress-image";
 import { createProperty } from "./actions";
 
 export default function NewPropertyForm({ error }: { error?: string }) {
+  const [status, setStatus] = useState("");
   const [, formAction, isPending] = useActionState(
     async (_prev: void, formData: FormData) => {
+      const photos = formData
+        .getAll("photos")
+        .filter((entry): entry is File => entry instanceof File && entry.size > 0);
+
+      if (photos.length > 0) {
+        formData.delete("photos");
+        for (let i = 0; i < photos.length; i++) {
+          setStatus(`Compressing photo ${i + 1} of ${photos.length}...`);
+          const compressed = await compressImage(photos[i]);
+          formData.append("photos", compressed);
+        }
+        setStatus(`Uploading ${photos.length} photos...`);
+      }
+
       await createProperty(formData);
     },
     undefined,
@@ -160,7 +177,7 @@ export default function NewPropertyForm({ error }: { error?: string }) {
             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
           </svg>
         )}
-        {isPending ? "Uploading..." : "Add Property"}
+        {isPending ? status || "Uploading..." : "Add Property"}
       </button>
     </form>
   );

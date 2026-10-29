@@ -29,25 +29,26 @@ export async function createProperty(formData: FormData) {
   }
 
   const supabase = createAdminClient();
-  const photo_urls: string[] = [];
 
-  for (const photo of photos) {
-    const ext = photo.name.includes(".") ? photo.name.split(".").pop() : "jpg";
-    const path = `${crypto.randomUUID()}.${ext}`;
+  const uploadResults = await Promise.all(
+    photos.map(async (photo) => {
+      const ext = photo.name.includes(".") ? photo.name.split(".").pop() : "jpg";
+      const path = `${crypto.randomUUID()}.${ext}`;
+      const { error: uploadError } = await supabase.storage
+        .from(PHOTO_BUCKET)
+        .upload(path, photo, { contentType: photo.type || "image/jpeg" });
+      if (uploadError) return { error: uploadError.message };
+      const { data } = supabase.storage.from(PHOTO_BUCKET).getPublicUrl(path);
+      return { url: data.publicUrl };
+    }),
+  );
 
-    const { error: uploadError } = await supabase.storage
-      .from(PHOTO_BUCKET)
-      .upload(path, photo, { contentType: photo.type || "image/jpeg" });
-
-    if (uploadError) {
-      redirect(
-        `/admin/properties/new?error=${encodeURIComponent(`Photo upload failed: ${uploadError.message}`)}`,
-      );
-    }
-
-    const { data } = supabase.storage.from(PHOTO_BUCKET).getPublicUrl(path);
-    photo_urls.push(data.publicUrl);
+  const failed = uploadResults.find((r) => "error" in r);
+  if (failed && "error" in failed) {
+    redirect(`/admin/properties/new?error=${encodeURIComponent(`Photo upload failed: ${failed.error}`)}`);
   }
+
+  const photo_urls = uploadResults.map((r) => ("url" in r ? r.url : ""));
 
   const { error: insertError } = await supabase.from("properties").insert({
     name,
