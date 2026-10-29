@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useActionState } from "react";
 import Image from "next/image";
 import { updateProperty } from "./actions";
 import type { Property } from "@/types/property";
@@ -13,6 +14,12 @@ export default function EditPropertyForm({
   error?: string;
 }) {
   const [photoUrls, setPhotoUrls] = useState<string[]>(property.photo_urls);
+  const [, formAction, isPending] = useActionState(
+    async (_prev: void, formData: FormData) => {
+      await updateProperty(formData);
+    },
+    undefined,
+  );
 
   function removePhoto(url: string) {
     setPhotoUrls((prev) => prev.filter((u) => u !== url));
@@ -20,7 +27,7 @@ export default function EditPropertyForm({
 
   return (
     <form
-      action={updateProperty}
+      action={formAction}
       encType="multipart/form-data"
       className="mt-5 space-y-5 rounded-2xl border border-stone-200 bg-white p-5 shadow-sm sm:p-6"
     >
@@ -208,9 +215,16 @@ export default function EditPropertyForm({
 
       <button
         type="submit"
-        className="w-full rounded-xl bg-stone-900 px-4 py-3 text-sm font-semibold text-white active:bg-stone-700 sm:hover:bg-stone-700"
+        disabled={isPending}
+        className="flex w-full items-center justify-center gap-2 rounded-xl bg-stone-900 px-4 py-3 text-sm font-semibold text-white transition-colors active:bg-stone-700 disabled:opacity-70 sm:hover:bg-stone-700"
       >
-        Save Changes
+        {isPending && (
+          <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+          </svg>
+        )}
+        {isPending ? "Saving..." : "Save Changes"}
       </button>
     </form>
   );
