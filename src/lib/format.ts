@@ -1,4 +1,12 @@
 export function formatPrice(price: number): string {
+  if (price >= 1_00_00_000) {
+    const cr = price / 1_00_00_000;
+    return `₹${cr % 1 === 0 ? cr.toFixed(0) : cr.toFixed(2).replace(/\.?0+$/, "")} Cr`;
+  }
+  if (price >= 1_00_000) {
+    const lakh = price / 1_00_000;
+    return `₹${lakh % 1 === 0 ? lakh.toFixed(0) : lakh.toFixed(2).replace(/\.?0+$/, "")} Lakh`;
+  }
   return new Intl.NumberFormat("en-IN", {
     style: "currency",
     currency: "INR",

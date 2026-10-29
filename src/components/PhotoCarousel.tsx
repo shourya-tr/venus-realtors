@@ -80,7 +80,7 @@ export default function PhotoCarousel({
             type="button"
             aria-label="Previous photo"
             onPointerDown={(e) => e.stopPropagation()}
-            onClick={(e) => { e.stopPropagation(); emblaApi?.scrollPrev(); }}
+            onClick={(e) => { e.preventDefault(); e.stopPropagation(); emblaApi?.scrollPrev(); }}
             className="absolute left-2.5 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-stone-700 shadow-md backdrop-blur-sm transition-all active:scale-90 sm:opacity-0 sm:group-hover:opacity-100 sm:focus:opacity-100"
           >
             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
@@ -91,7 +91,7 @@ export default function PhotoCarousel({
             type="button"
             aria-label="Next photo"
             onPointerDown={(e) => e.stopPropagation()}
-            onClick={(e) => { e.stopPropagation(); emblaApi?.scrollNext(); }}
+            onClick={(e) => { e.preventDefault(); e.stopPropagation(); emblaApi?.scrollNext(); }}
             className="absolute right-2.5 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-stone-700 shadow-md backdrop-blur-sm transition-all active:scale-90 sm:opacity-0 sm:group-hover:opacity-100 sm:focus:opacity-100"
           >
             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
@@ -105,7 +105,7 @@ export default function PhotoCarousel({
                 type="button"
                 aria-label={`Go to slide ${i + 1}`}
                 onPointerDown={(e) => e.stopPropagation()}
-                onClick={(e) => { e.stopPropagation(); emblaApi?.scrollTo(i); }}
+                onClick={(e) => { e.preventDefault(); e.stopPropagation(); emblaApi?.scrollTo(i); }}
                 className={`h-2.5 w-2.5 rounded-full transition-colors ${
                   i === selectedIndex ? "bg-white" : "bg-white/50"
                 }`}
